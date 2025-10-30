@@ -281,6 +281,17 @@ impl<'l, PIO: Instance> Pin<'l, PIO> {
         });
     }
 
+    #[inline]
+    pub fn set_output_enable_inversion(&mut self, invert: bool) {
+        self.pin.gpio().ctrl().modify(|w| {
+            w.set_oeover(if invert {
+                pac::io::vals::Oeover::INVERT
+            } else {
+                pac::io::vals::Oeover::NORMAL
+            })
+        })
+    }
+
     /// Set the pin's input sync bypass.
     pub fn set_input_sync_bypass(&mut self, bypass: bool) {
         let mask = 1 << self.pin();
